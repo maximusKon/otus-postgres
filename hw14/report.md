@@ -12,12 +12,12 @@ begin
 	    WHEN 'DELETE'
 	        THEN data_row = OLD;
 	    WHEN 'UPDATE'
-	        THEN data_row = NEW; -- здесь исхожу из того, что можно лишь апдейтнуть продажу товара, но не товар в продаже
+	        THEN data_row = NEW; -- здесь исхожу из того, что можно лишь апдейтнуть количество проданного товара, но не саму ссылку на товар
 	    WHEN 'INSERT'
 	        THEN data_row = NEW;
 	END CASE;
       
-   SELECT G.good_name as good_name, coalesce(sum(G.good_price * S.sales_qty), 0) as sum_sale into new_good_sum_mart_record
+   	SELECT G.good_name as good_name, coalesce(sum(G.good_price * S.sales_qty), 0) as sum_sale into new_good_sum_mart_record
 		FROM pract_functions.goods G
 		left JOIN pract_functions.sales S ON S.good_id = G.goods_id
 		where G.goods_id = data_row.good_id
