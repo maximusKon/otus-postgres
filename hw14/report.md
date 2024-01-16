@@ -1,4 +1,4 @@
-```
+```sql
 CREATE OR REPLACE FUNCTION compute_sales()
 RETURNS trigger
 AS
