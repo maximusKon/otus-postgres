@@ -63,12 +63,10 @@ INSERT INTO pract_functions.sales (good_id,sales_time,sales_qty) VALUES
 ```
 
 Состояние `good_sum_mart`:
-```sql
 | good_name	| sum_sale 	|
 | ------------- | ------------- |
 | Спички хозайственные	| 6.00	|
 | Автомобиль Ferrari FXX K	| 370000000.02	|
-```
 
 Изменим количество товаров в одной из строк в `sales`:
 ```sql
@@ -76,12 +74,10 @@ update pract_functions.sales set sales_qty = 3 where sales_id = 2; -- строк
 ```
 
 Состояние `good_sum_mart`:
-```sql
 | good_name	| sum_sale 	|
 | ------------- | ------------- |
 | Спички хозайственные	| 2.5	|
 | Автомобиль Ferrari FXX K	| 370000000.02	|
-```
 
 Удалим строки из `sales`:
 ```sql
@@ -90,8 +86,6 @@ delete from pract_functions.sales where sales_id = 3; -- строка (2,'2024-0
 ```
 
 Состояние `good_sum_mart`:
-```sql
 | good_name	| sum_sale 	|
 | ------------- | ------------- |
 | Спички хозайственные	| 1.5	|
-```
