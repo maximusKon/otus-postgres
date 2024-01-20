@@ -1,3 +1,4 @@
+Напишем функцию для расчёта суммы денег за проданные товары и обновления представления `good_sum_mart`:
 ```sql
 CREATE OR REPLACE FUNCTION compute_sales()
 RETURNS trigger
@@ -36,10 +37,61 @@ begin
   RETURN data_row;
 END;
 $$ LANGUAGE plpgsql;
-
+```
+Добавим тригер на после вставки, апдейта и удаления для каждой строки: 
+```sql
 CREATE TRIGGER trg_after_row_change_sales
 AFTER INSERT OR UPDATE OR DELETE
 ON pract_functions.sales
 FOR EACH ROW
 EXECUTE FUNCTION compute_sales();
+```
+Примеры
+
+Каталог товаров (`goods`):
+| goods_id	| good_name 	| good_price	|
+| ------------- | ------------- | ------------- |
+| 1		| Спички хозайственные | 0.50	|	
+| 2		| Автомобиль Ferrari FXX K	| 185000000.01	|
+
+Добавим в `sales` следующие строки:
+```sql
+INSERT INTO pract_functions.sales (good_id,sales_time,sales_qty) VALUES
+	 (1,'2024-01-09 20:50:32.683388+03',2),
+	 (1,'2024-01-10 21:50:32.683388+03',10),
+	 (2,'2024-01-09 20:50:32.683+03',2);
+```
+
+Состояние `good_sum_mart`:
+```sql
+| good_name	| sum_sale 	|
+| ------------- | ------------- |
+| Спички хозайственные	| 6.00	|
+| Автомобиль Ferrari FXX K	| 370000000.02	|
+```
+
+Изменим количество товаров в одной из строк в `sales`:
+```sql
+update pract_functions.sales set sales_qty = 3 where sales_id = 2; -- строка (1,'2024-01-10 21:50:32.683388+03',10)
+```
+
+Состояние `good_sum_mart`:
+```sql
+| good_name	| sum_sale 	|
+| ------------- | ------------- |
+| Спички хозайственные	| 2.5	|
+| Автомобиль Ferrari FXX K	| 370000000.02	|
+```
+
+Удалим строки из `sales`:
+```sql
+delete from pract_functions.sales where sales_id = 1; -- строка (1,'2024-01-09 20:50:32.683388+03',2)
+delete from pract_functions.sales where sales_id = 3; -- строка (2,'2024-01-09 20:50:32.683+03',2)
+```
+
+Состояние `good_sum_mart`:
+```sql
+| good_name	| sum_sale 	|
+| ------------- | ------------- |
+| Спички хозайственные	| 1.5	|
 ```
