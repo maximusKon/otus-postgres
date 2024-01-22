@@ -45,3 +45,18 @@ begin
 end;
 $$ language plpgsql;
 ```
+
+Сравним планы запросов для непартиционированной и партиционированой версией таблицы
+```sql
+explain (analyze) select * from ticket_flights tf where tf.fare_conditions = 'Business' and tf.amount >= 49700
+```
+
+Непартиционированная таблица
+
+![image](https://github.com/maximusKon/otus-postgres/assets/28565433/91b8e545-cc8e-4ba2-808e-4c2bfe90f7d3)
+
+Партиционированная таблица
+
+![image](https://github.com/maximusKon/otus-postgres/assets/28565433/4ff9675a-7cf3-4a90-bf99-1b672f8fd741)
+
+Мы видим, что планировщик по условию `tf.fare_conditions = 'Business'` сразу понимает в какую партицию идти, что заметно упрощает план.  
